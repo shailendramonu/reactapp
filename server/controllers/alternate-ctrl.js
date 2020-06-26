@@ -1,4 +1,5 @@
 const Alternate = require('../models/alternate-model')
+const store = require('app-store-scraper');
 
 createAlternate = (req, res) => {
   const body = req.body
@@ -113,10 +114,21 @@ getAlternates = async (req, res) => {
   }).catch(err => console.log(err))
 }
 
+getSearch = async (req, res) => {
+  console.log(req.query);
+  const results = await store.search({
+    term: req.query.term,
+    num: 5,
+    //idsOnly: true
+  })
+  return res.status(200).json({ success: true, data: results})
+}
+
 module.exports = {
   createAlternate,
   updateAlternate,
   deleteAlternate,
   getAlternates,
   getAlternateById,
+  getSearch
 }
