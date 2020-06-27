@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
 import api from '../api'
-
+import Select from "react-dropdown-select"
 import styled from 'styled-components'
+
+const options = [
+  { value: 'Alternate', label: 'Alternate List' },
+  { value: 'Native', label: 'Native List' },
+];
 
 const Title = styled.h1.attrs({
   className: 'h1',
@@ -46,7 +51,9 @@ class AlternatesInsert extends Component {
       genres: '',
       region: '',
       results: [],
-      search: ''
+      search: '',
+      listType: '',
+      selectedList: ''
     }
   }
 
@@ -76,19 +83,32 @@ class AlternatesInsert extends Component {
   }
 
   handleIncludeAlternate = async () => {
-    const { appId, title, icon, genres, region } = this.state
+    const { appId, title, icon, genres, region, listType } = this.state
     const payload = { appId, title, icon, genres, region }
 
-    await api.insertAlternate(payload).then(() => {
-      window.alert(`Alternate inserted successfully`)
-      this.setState({
-        appId: '',
-        title: '',
-        icon: '',
-        genres: '',
-        region: ''
+    if (listType === 'Alternate'){
+      await api.insertAlternate(payload).then(() => {
+        window.alert(`Alternate inserted successfully`)
+        this.setState({
+          appId: '',
+          title: '',
+          icon: '',
+          genres: '',
+          region: ''
+        })
       })
-    })
+  } else {
+      await api.insertNative(payload).then(() => {
+        window.alert(`Native inserted successfully`)
+        this.setState({
+          appId: '',
+          title: '',
+          icon: '',
+          genres: '',
+          region: ''
+        })
+      })
+    }
   }
 
   handleChangeInputSearch = async event => {
@@ -116,8 +136,15 @@ class AlternatesInsert extends Component {
     }.bind(this)
   }
 
+  handleListDropDown = selectedList => {
+    this.setState({selectedList}) 
+    const { listType } = this.state
+    this.setState({listType : selectedList[0].value}) 
+    console.log(`Option selected:`, listType);
+  }
+
   render() {
-    const { appId, title, icon, genres, region, results, search } = this.state
+    const { appId, title, icon, genres, region, results, search, listType, selectedList } = this.state
     return (
       <Wrapper>
         <Title>Search</Title>
@@ -133,7 +160,9 @@ class AlternatesInsert extends Component {
           { results.map((app, i) => { return <li key={i}><button key={i} onClick={this.handleChangeAppSelect(app)}>{ app.title }</button></li> })}
         </ul>
 
-        <Title>Create Alternate</Title>
+        <Select value={selectedList} placeholder="Select List" options={options} onChange={this.handleListDropDown}/>
+
+        <Title>Create {listType} Item</Title>
 
         <Label>App ID: </Label>
         <InputText
@@ -170,7 +199,7 @@ class AlternatesInsert extends Component {
           onChange={this.handleChangeInputRegion}
         />
 
-        <Button onClick={this.handleIncludeAlternate}>Add Alternate</Button>
+        <Button onClick={this.handleIncludeAlternate}>Add {listType}</Button>
         <CancelButton href={'/alternates/list'}>Cancel</CancelButton>
       </Wrapper>
     )
