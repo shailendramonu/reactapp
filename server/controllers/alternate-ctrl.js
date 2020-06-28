@@ -3,6 +3,7 @@ const store = require('app-store-scraper');
 
 createAlternate = (req, res) => {
   const body = req.body
+  body.foreign_id = body.relations
 
   if (!body) {
     return res.status(400).json({
@@ -100,6 +101,16 @@ getAlternateById = async (req, res) => {
   }).catch(err => console.log(err))
 }
 
+getAlternateByTitle = async (req, res) => {
+  await Alternate.find({ title: { $regex: req.params.title, $options: 'i'} }, (err, native) => {
+    if (err) {
+      return res.status(400).json({ success: false, error: err })
+    }
+
+    return res.status(200).json({ success: true, data: native })
+  }).catch(err => console.log(err))
+}
+
 getAlternates = async (req, res) => {
   await Alternate.find({}, (err, alternates) => {
     if (err) {
@@ -130,5 +141,6 @@ module.exports = {
   deleteAlternate,
   getAlternates,
   getAlternateById,
+  getAlternateByTitle,
   getSearch
 }

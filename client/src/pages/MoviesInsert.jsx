@@ -53,7 +53,7 @@ class AlternatesInsert extends Component {
       icon: '',
       genres: '',
       region: '',
-      relations: '',
+      relations: [],
       results: [],
       search: '',
       listType: '',      
@@ -147,20 +147,29 @@ class AlternatesInsert extends Component {
   }
 
   handleListDropDown = selectedList => {
-    this.setState({selectedList}) 
-    const { listType } = this.state
-    this.setState({listType : selectedList[0].value}) 
-    console.log(`Option selected:`, listType);
+    this.setState({listType : selectedList[0].value})
   }
 
   handleChangeAppsSearch = async (title) => {
+    const { listType } = this.state;
     this.setState({isLoading: true});
-    await api.getNativeByTitle(title).then(natives => {
-      this.setState({
-        appsOptions: natives.data.data,
-        isLoading: false
-      });
-    })
+    if (listType === 'Alternate'){
+      console.log('Native', title)
+      await api.getNativeByTitle(title).then(natives => {
+        this.setState({
+          appsOptions: natives.data.data,
+          isLoading: false
+        });
+      })
+    } else {
+      console.log('Alternate', title)
+      await api.getAlternateByTitle(title).then(natives => {
+        this.setState({
+          appsOptions: natives.data.data,
+          isLoading: false
+        });
+      })
+    }
   }
 
   handleChangeAppsSelect = (select) => {

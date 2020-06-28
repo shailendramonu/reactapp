@@ -9,6 +9,7 @@ export const getAllAlternates = () => api.get(`/alternates`)
 export const updateAlternateById = (id, payload) => api.put(`/alternate/${id}`, payload)
 export const deleteAlternateById = id => api.delete(`/alternate/${id}`)
 export const getAlternateById = id => api.get(`/alternate/${id}`)
+export const getAlternateByTitle = title => api.get(`/alternates/${title}`)
 export const getIosApps = (term) => api.get('/search', { params: { term: term }})
 
 export const insertNative = payload => api.post(`/native`, payload)
@@ -24,6 +25,7 @@ const apis = {
   updateAlternateById,
   deleteAlternateById,
   getAlternateById,
+  getAlternateByTitle,
   getIosApps,
   insertNative,
   getAllNatives,

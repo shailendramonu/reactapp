@@ -3,8 +3,8 @@ const store = require('app-store-scraper');
 
 createNative = (req, res) => {
   const body = req.body
+  body.native_id = body.relations
 
-  console.log("Adding: " + body);
   if (!body) {
     return res.status(400).json({
       success: false,
