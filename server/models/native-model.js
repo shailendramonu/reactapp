@@ -8,7 +8,7 @@ const Native = new Schema (
     icon: { type: String, required: true },
     genres: { type: String, required: true },
     region: { type: String, required: false },
-    alters: {type: Array, default : [11,22] }
+    native_id: {type: Array, required: false }
   },
 )
 

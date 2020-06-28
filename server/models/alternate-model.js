@@ -8,6 +8,7 @@ const Alternate = new Schema(
     icon: { type: String, required: true },
     genres: { type: String, required: true },
     region: { type: String, required: false },
+    foreign_id: { type: Array, required: false },
   },
   // { timestamps: true },
 )
