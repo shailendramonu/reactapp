@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Container, Row, Col } from 'reactstrap';
 import api from '../api'
 import Select from "react-dropdown-select"
 import styled from 'styled-components'
@@ -50,9 +51,14 @@ class AlternatesInsert extends Component {
       icon: '',
       genres: '',
       region: '',
+      alternate1: '',
+      alternate2: '',
+      alternate3: '',
+      alternate4: '',
+      alternate5: '',
       results: [],
       search: '',
-      listType: '',
+      listType: '',      
       selectedList: ''
     }
   }
@@ -82,9 +88,25 @@ class AlternatesInsert extends Component {
     this.setState({ region })
   }
 
-  handleIncludeAlternate = async () => {
-    const { appId, title, icon, genres, region, listType } = this.state
-    const payload = { appId, title, icon, genres, region }
+  handleCreateItem = async () => {
+    const alters = [];
+    const { appId, title, icon, genres, region, listType, alternate1, alternate2, alternate3, alternate4, alternate5 } = this.state
+    if (alternate1 > 0){
+      alters.push(alternate1);
+    }
+    if (alternate2 > 0){
+      alters.push(alternate2);
+    }
+    if (alternate3 > 0){
+      alters.push(alternate3);
+    }
+    if (alternate4 > 0){
+      alters.push(alternate4);
+    }
+    if (alternate5 > 0){
+      alters.push(alternate5);
+    }
+    const payload = { appId, title, icon, genres, region, alters }
 
     if (listType === 'Alternate'){
       await api.insertAlternate(payload).then(() => {
@@ -94,7 +116,12 @@ class AlternatesInsert extends Component {
           title: '',
           icon: '',
           genres: '',
-          region: ''
+          region: '',
+          alternate1: '',
+          alternate2: '',
+          alternate3: '',
+          alternate4: '',
+          alternate5: '',
         })
       })
   } else {
@@ -105,7 +132,12 @@ class AlternatesInsert extends Component {
           title: '',
           icon: '',
           genres: '',
-          region: ''
+          region: '',
+          alternate1: '',
+          alternate2: '',
+          alternate3: '',
+          alternate4: '',
+          alternate5: '',
         })
       })
     }
@@ -143,64 +175,126 @@ class AlternatesInsert extends Component {
     console.log(`Option selected:`, listType);
   }
 
+  handleChangeInputAlternate1 = async event => {
+    const alternate1 = event.target.value
+    this.setState({ alternate1 })
+  }
+  
+  handleChangeInputAlternate2 = async event => {
+    const alternate2 = event.target.value
+    this.setState({ alternate2 })
+  }  
+
+  handleChangeInputAlternate3 = async event => {
+    const alternate3 = event.target.value
+    this.setState({ alternate3 })
+  }  
+  
+  handleChangeInputAlternate4 = async event => {
+    const alternate4 = event.target.value
+    this.setState({ alternate4 })
+  }  
+
+  handleChangeInputAlternate5 = async event => {
+    const alternate5 = event.target.value
+    this.setState({ alternate5 })
+  }  
+
   render() {
-    const { appId, title, icon, genres, region, results, search, listType, selectedList } = this.state
+    const { appId, title, icon, genres, region, results, search, listType, selectedList, alternate1, alternate2 , alternate3, alternate4, alternate5} = this.state
     return (
       <Wrapper>
-        <Title>Search</Title>
-        <Label>Term:</Label>
-        <InputText
-          type="text"
-          placeholder="Search"
-          value={search}
-          onChange={this.handleChangeInputSearch}
-        />
-        <Button onClick={this.handleChangeSearch}>Search</Button>
-        <ul>
-          { results.map((app, i) => { return <li key={i}><button key={i} onClick={this.handleChangeAppSelect(app)}>{ app.title }</button></li> })}
-        </ul>
+        <Container>
+          <Row>
+            <Col>
+              <Title>Search</Title>
+              <Label>Term:</Label>
+              <InputText
+                type="text"
+                placeholder="Search"
+                value={search}
+                onChange={this.handleChangeInputSearch}
+              />
+              <Button onClick={this.handleChangeSearch}>Search</Button>
+              <ul>
+                { results.map((app, i) => { return <li key={i}><button key={i} onClick={this.handleChangeAppSelect(app)}>{ app.title }</button></li> })}
+              </ul>
+            </Col>
 
-        <Select value={selectedList} placeholder="Select List" options={options} onChange={this.handleListDropDown}/>
+            <Col>
+              <Title>Create {listType} Item</Title>
 
-        <Title>Create {listType} Item</Title>
+              <Select value={selectedList} placeholder="Select List" options={options} onChange={this.handleListDropDown}/>
 
-        <Label>App ID: </Label>
-        <InputText
-          type="number"
-          value={appId}
-          onChange={this.handleChangeInputAppId}
-        />
+              <Label>App ID: </Label>
+              <InputText
+                type="number"
+                value={appId}
+                onChange={this.handleChangeInputAppId}
+              />
 
-        <Label>Title: </Label>
-        <InputText
-          type="text"
-          value={title}
-          onChange={this.handleChangeInputTitle}
-        />
+              <Label>Title: </Label>
+              <InputText
+                type="text"
+                value={title}
+                onChange={this.handleChangeInputTitle}
+              />
 
-        <Label>Icon URL: </Label>
-        <InputText
-          type="text"
-          value={icon}
-          onChange={this.handleChangeInputIcon}
-        />
+              <Label>Icon URL: </Label>
+              <InputText
+                type="text"
+                value={icon}
+                onChange={this.handleChangeInputIcon}
+              />
 
-        <Label>Genres: </Label>
-        <InputText
-          type="text"
-          value={genres}
-          onChange={this.handleChangeInputGenres}
-        />
+              <Label>Genres: </Label>
+              <InputText
+                type="text"
+                value={genres}
+                onChange={this.handleChangeInputGenres}
+              />
 
-        <Label>Region: </Label>
-        <InputText
-          type="text"
-          value={region}
-          onChange={this.handleChangeInputRegion}
-        />
+              <Label>Region: </Label>
+              <InputText
+                type="text"
+                value={region}
+                onChange={this.handleChangeInputRegion}
+              />
 
-        <Button onClick={this.handleIncludeAlternate}>Add {listType}</Button>
-        <CancelButton href={'/alternates/list'}>Cancel</CancelButton>
+              <Label>Alternates: </Label>
+              <InputText
+                type="number"
+                value={alternate1}
+                onChange={this.handleChangeInputAlternate1}
+              />
+              <InputText
+                type="number"
+                value={alternate2}
+                onChange={this.handleChangeInputAlternate2}
+              />
+              <InputText
+                type="number"
+                value={alternate3}
+                onChange={this.handleChangeInputAlternate3}
+              />
+              <InputText
+                type="number"
+                value={alternate4}
+                onChange={this.handleChangeInputAlternate4}
+              />
+              <InputText
+                type="number"
+                value={alternate5}
+                onChange={this.handleChangeInputAlternate5}
+              />
+
+              <Button onClick={this.handleCreateItem}>Add {listType}</Button>
+              <CancelButton href={'/alternates/list'}>Cancel</CancelButton>
+
+            </Col>
+          </Row>
+        </Container>
+
       </Wrapper>
     )
   }

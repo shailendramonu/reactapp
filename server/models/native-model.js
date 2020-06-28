@@ -7,7 +7,8 @@ const Native = new Schema (
     title: { type: String, required: true },
     icon: { type: String, required: true },
     genres: { type: String, required: true },
-    region: { type: String, required: false },    
+    region: { type: String, required: false },
+    alters: {type: Array, default : [11,22] }
   },
 )
 
