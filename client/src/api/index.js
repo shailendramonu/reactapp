@@ -16,6 +16,7 @@ export const getAllNatives = () => api.get(`/natives`)
 export const updateNativeById = (id, payload) => api.put(`/native/${id}`, payload)
 export const deleteNativeById = id => api.delete(`/native/${id}`)
 export const getNativeById = id => api.get(`/native/${id}`)
+export const getNativeByTitle = title => api.get(`/natives/${title}`)
 
 const apis = {
   insertAlternate,
@@ -28,7 +29,8 @@ const apis = {
   getAllNatives,
   updateNativeById,
   deleteNativeById,
-  getNativeById
+  getNativeById,
+  getNativeByTitle,
 }
 
 export default apis

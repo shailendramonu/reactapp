@@ -1,12 +1,14 @@
-import React, { Component } from 'react'
-import { Container, Row, Col } from 'reactstrap';
+import React, { Component, Fragment } from 'react'
+import { Container, Row, Col } from 'reactstrap'
 import api from '../api'
 import Select from "react-dropdown-select"
+import { AsyncTypeahead } from 'react-bootstrap-typeahead'
 import styled from 'styled-components'
+import 'react-bootstrap-typeahead/css/Typeahead.css'
 
 const options = [
-  { value: 'Alternate', label: 'Alternate List' },
-  { value: 'Native', label: 'Native List' },
+  { value: 'Alternate', label: 'Foreign/Chinese List' },
+  { value: 'Native', label: 'Native/Indian List' },
 ];
 
 const Title = styled.h1.attrs({
@@ -51,15 +53,13 @@ class AlternatesInsert extends Component {
       icon: '',
       genres: '',
       region: '',
-      alternate1: '',
-      alternate2: '',
-      alternate3: '',
-      alternate4: '',
-      alternate5: '',
+      relations: '',
       results: [],
       search: '',
       listType: '',      
-      selectedList: ''
+      selectedList: '',
+      isLoading: false,
+      appsOptions: []
     }
   }
 
@@ -89,25 +89,9 @@ class AlternatesInsert extends Component {
   }
 
   handleCreateItem = async () => {
-    const alters = [];
-    const { appId, title, icon, genres, region, listType, alternate1, alternate2, alternate3, alternate4, alternate5 } = this.state
-    if (alternate1 > 0){
-      alters.push(alternate1);
-    }
-    if (alternate2 > 0){
-      alters.push(alternate2);
-    }
-    if (alternate3 > 0){
-      alters.push(alternate3);
-    }
-    if (alternate4 > 0){
-      alters.push(alternate4);
-    }
-    if (alternate5 > 0){
-      alters.push(alternate5);
-    }
-    const payload = { appId, title, icon, genres, region, alters }
-
+    const { appId, title, icon, genres, region, relations, listType } = this.state
+    const payload = { appId, title, icon, genres, region, relations }
+    console.log(payload);
     if (listType === 'Alternate'){
       await api.insertAlternate(payload).then(() => {
         window.alert(`Alternate inserted successfully`)
@@ -117,11 +101,8 @@ class AlternatesInsert extends Component {
           icon: '',
           genres: '',
           region: '',
-          alternate1: '',
-          alternate2: '',
-          alternate3: '',
-          alternate4: '',
-          alternate5: '',
+          relation: '',
+          appsOptions: [],
         })
       })
   } else {
@@ -133,11 +114,8 @@ class AlternatesInsert extends Component {
           icon: '',
           genres: '',
           region: '',
-          alternate1: '',
-          alternate2: '',
-          alternate3: '',
-          alternate4: '',
-          alternate5: '',
+          relation: '',
+          appsOptions: [],
         })
       })
     }
@@ -175,33 +153,28 @@ class AlternatesInsert extends Component {
     console.log(`Option selected:`, listType);
   }
 
-  handleChangeInputAlternate1 = async event => {
-    const alternate1 = event.target.value
-    this.setState({ alternate1 })
+  handleChangeAppsSearch = async (title) => {
+    this.setState({isLoading: true});
+    await api.getNativeByTitle(title).then(natives => {
+      this.setState({
+        appsOptions: natives.data.data,
+        isLoading: false
+      });
+    })
   }
-  
-  handleChangeInputAlternate2 = async event => {
-    const alternate2 = event.target.value
-    this.setState({ alternate2 })
-  }  
 
-  handleChangeInputAlternate3 = async event => {
-    const alternate3 = event.target.value
-    this.setState({ alternate3 })
-  }  
-  
-  handleChangeInputAlternate4 = async event => {
-    const alternate4 = event.target.value
-    this.setState({ alternate4 })
-  }  
-
-  handleChangeInputAlternate5 = async event => {
-    const alternate5 = event.target.value
-    this.setState({ alternate5 })
-  }  
+  handleChangeAppsSelect = (select) => {
+    const appIds = select.map(i => {
+      return i.appId;
+    })
+    console.log(appIds);
+    this.setState({
+      relations: appIds
+    })
+  }
 
   render() {
-    const { appId, title, icon, genres, region, results, search, listType, selectedList, alternate1, alternate2 , alternate3, alternate4, alternate5} = this.state
+    const { appId, title, icon, genres, region, results, search, listType, selectedList, isLoading, appsOptions} = this.state
     return (
       <Wrapper>
         <Container>
@@ -224,7 +197,11 @@ class AlternatesInsert extends Component {
             <Col>
               <Title>Create {listType} Item</Title>
 
-              <Select value={selectedList} placeholder="Select List" options={options} onChange={this.handleListDropDown}/>
+              <Select
+                required
+                value={selectedList}
+                placeholder="Select List" options={options}
+                onChange={this.handleListDropDown}/>
 
               <Label>App ID: </Label>
               <InputText
@@ -262,30 +239,22 @@ class AlternatesInsert extends Component {
               />
 
               <Label>Alternates: </Label>
-              <InputText
-                type="number"
-                value={alternate1}
-                onChange={this.handleChangeInputAlternate1}
-              />
-              <InputText
-                type="number"
-                value={alternate2}
-                onChange={this.handleChangeInputAlternate2}
-              />
-              <InputText
-                type="number"
-                value={alternate3}
-                onChange={this.handleChangeInputAlternate3}
-              />
-              <InputText
-                type="number"
-                value={alternate4}
-                onChange={this.handleChangeInputAlternate4}
-              />
-              <InputText
-                type="number"
-                value={alternate5}
-                onChange={this.handleChangeInputAlternate5}
+              <AsyncTypeahead
+                id="typeahead-apps"
+                isLoading={isLoading}
+                labelKey="title"
+                filterBy={['title']}
+                multiple
+                minLength={3}
+                onSearch={this.handleChangeAppsSearch}
+                onChange={this.handleChangeAppsSelect}
+                options={appsOptions}
+                placeholder="Search for a Apps..."
+                renderMenuItemChildren={(option, props) => (
+                  <Fragment>
+                    <span>{option.appId}, {option.title}</span>
+                  </Fragment>
+                )}
               />
 
               <Button onClick={this.handleCreateItem}>Add {listType}</Button>

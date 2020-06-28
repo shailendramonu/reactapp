@@ -101,6 +101,16 @@ getNativeById = async (req, res) => {
   }).catch(err => console.log(err))
 }
 
+getNativeByTitle = async (req, res) => {
+  await Native.find({ title: { $regex: req.params.title, $options: 'i'} }, (err, native) => {
+    if (err) {
+      return res.status(400).json({ success: false, error: err })
+    }
+
+    return res.status(200).json({ success: true, data: native })
+  }).catch(err => console.log(err))
+}
+
 getNatives = async (req, res) => {
   await Native.find({}, (err, natives) => {
     if (err) {
@@ -131,5 +141,6 @@ module.exports = {
   deleteNative,
   getNatives,
   getNativeById,
+  getNativeByTitle,
   getSearch
 }

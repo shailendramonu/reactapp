@@ -8,6 +8,7 @@ router.post('/native', NativeCtrl.createNative)
 router.put('/native/:id', NativeCtrl.updateNative)
 router.delete('/native/:id', NativeCtrl.deleteNative)
 router.get('/native/:id', NativeCtrl.getNativeById)
+router.get('/natives/:title', NativeCtrl.getNativeByTitle)
 router.get('/natives', NativeCtrl.getNatives)
 router.get('/search', NativeCtrl.getSearch)
 
