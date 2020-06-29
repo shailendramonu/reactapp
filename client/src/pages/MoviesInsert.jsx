@@ -199,7 +199,7 @@ class AlternatesInsert extends Component {
               />
               <Button onClick={this.handleChangeSearch}>Search</Button>
               <ul>
-                { results.map((app, i) => { return <li key={i}><button key={i} onClick={this.handleChangeAppSelect(app)}>{ app.title }</button></li> })}
+                { results.map((app, i) => { return <li key={i}><img src={app.icon} width='50' height='50'/><button key={i} onClick={this.handleChangeAppSelect(app)}>{ app.title }</button></li> })}
               </ul>
             </Col>
 
