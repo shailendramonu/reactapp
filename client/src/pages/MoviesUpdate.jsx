@@ -44,7 +44,7 @@ class AlternatesUpdate extends Component {
       appId: '',
       title: '',
       icon: '',
-      genres: '',
+      genre: '',
       region: ''
     }
   }
@@ -65,8 +65,8 @@ class AlternatesUpdate extends Component {
   }
 
   handleChangeInputGenres = async event => {
-    const genres = event.target.value
-    this.setState({ genres })
+    const genre = event.target.value
+    this.setState({ genre })
   }
 
   handleChangeInputRegion = async event => {
@@ -75,8 +75,8 @@ class AlternatesUpdate extends Component {
   }
 
   handleUpdateAlternate = async () => {
-    const { id, appId, title, icon, genres, region } = this.state
-    const payload = { appId, title, icon, genres, region }
+    const { id, appId, title, icon, genre, region } = this.state
+    const payload = { appId, title, icon, genre, region }
 
     await api.updateAlternateById(id, payload).then(() => {
       window.alert(`Alternate updated successfully`)
@@ -84,7 +84,7 @@ class AlternatesUpdate extends Component {
         appId: '',
         title: '',
         icon: '',
-        genres: '',
+        genre: '',
         region: ''
       })
     })
@@ -98,13 +98,13 @@ class AlternatesUpdate extends Component {
       appId: alternate.data.data.appId,
       title: alternate.data.data.title,
       icon: alternate.data.data.icon,
-      genres: alternate.data.data.genres,
+      genre: alternate.data.data.genre,
       region: alternate.data.data.region
     })
   }
 
   render() {
-    const { appId, title, icon, genres, region } = this.state
+    const { appId, title, icon, genre, region } = this.state
     return (
       <Wrapper>
         <Title>Create Alternate</Title>
@@ -133,7 +133,7 @@ class AlternatesUpdate extends Component {
         <Label>Genres: </Label>
         <InputText
           type="text"
-          value={genres}
+          value={genre}
           onChange={this.handleChangeInputGenres}
         />
 

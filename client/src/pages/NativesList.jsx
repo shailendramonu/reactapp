@@ -102,7 +102,7 @@ class NativesList extends Component {
       },
       {
         Header: 'Genres',
-        accessor: 'genres',
+        accessor: 'genre',
         filterable: true,
       },
       {
